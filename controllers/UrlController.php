@@ -63,12 +63,16 @@ class UrlController extends Controller
         $newRecord->hash_string = $hash;
         $newRecord->url = $url;
         $newRecord->status_code = $newStatusCode;
+        $newRecord->updated_at = date('Y-m-d H:i:s');
+        $newRecord->created_at = date('Y-m-d H:i:s');
 
         if ($this->checkFailedStatusCode($newStatusCode)) {
             $newRecord->failed_attempts = 1;
         }
 
-        $newRecord->save(); // created_at/updated_at = now, query_count = 1, failed_attempts = 0 - default values
+        $newRecord->save(); // query_count = 1, failed_attempts = 0 - default values
+
+        $this->saveCacheUpdatedAt($hash, $newRecord->updated_at);
 
         return $newStatusCode;
     }
@@ -76,12 +80,13 @@ class UrlController extends Controller
     private function updateRecordAndReturnStatusCode(UrlRequest $existingRecord): int
     {
         $currentTime = time();
-        $lastUpdateTime = strtotime($existingRecord->updated_at);
+        $lastUpdateTime = strtotime($this->getCacheUpdatedAt($existingRecord->hash_string));
 
         if ($currentTime - $lastUpdateTime > self::LAST_UPDATE_TIMEOUT) {
             $newStatusCode = $this->fetchStatusCode($existingRecord->url);
             $existingRecord->status_code = $newStatusCode;
             $existingRecord->updated_at = date('Y-m-d H:i:s');
+            $this->saveCacheUpdatedAt($existingRecord->hash_string, $existingRecord->updated_at);
 
             if ($this->checkFailedStatusCode($newStatusCode)) {
                 $existingRecord->failed_attempts++;
@@ -94,6 +99,16 @@ class UrlController extends Controller
         $existingRecord->save();
 
         return $newStatusCode;
+    }
+
+    private function saveCacheUpdatedAt(string $hash, $updatedAt): void
+    {
+        Yii::$app->redis->set($hash, $updatedAt);
+    }
+
+    private function getCacheUpdatedAt(string $hash): string
+    {
+        return Yii::$app->redis->get($hash);
     }
 
     private function checkFailedStatusCode(int $code): bool

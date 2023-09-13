@@ -25,6 +25,11 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'redis',
+            'port' => env('REDIS_PORT'),
+        ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
