@@ -6,8 +6,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist
-
 EXPOSE 80
 
 # executed every hour
