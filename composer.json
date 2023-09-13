@@ -20,7 +20,8 @@
         "yiisoft/yii2-symfonymailer": "~2.0.3",
         "yiithings/yii2-dotenv": "*",
         "yiisoft/yii2-httpclient": "^2.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "yiisoft/yii2-redis": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

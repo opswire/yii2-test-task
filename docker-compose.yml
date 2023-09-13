@@ -10,10 +10,15 @@ services:
       - '8080:80'
     depends_on:
       - db
+      - redis
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: yii2basic
     ports:
-      - '3306:3306'
+      - '33060:3306'
+  redis:
+    image: redis:latest
+    ports:
+      - '6370:6379'
