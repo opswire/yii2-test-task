@@ -20,6 +20,7 @@ class m230913_064525_create_url_requests_table extends Migration
             'status_code' => $this->smallInteger()->notNull(),
             'query_count' => $this->integer()->defaultValue(1),
             'failed_attempts' => $this->integer()->defaultValue(0)->comment('The number of failed attempts'),
+            'is_disabled' => $this->boolean()->defaultValue(0),
         ]);
 
         $this->addPrimaryKey('pk_hash_string', '{{%url_requests}}', 'hash_string');
