@@ -36,6 +36,7 @@ docker-compose up -d
 ~~~
 docker-compose run --rm php yii migrate
 ~~~
+Сервер доступен по 8080 порту ([docker-compose.yml](docker-compose.yml))
 
 ### Запуск консольной команды
 
